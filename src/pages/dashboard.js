@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { UPDATE_LOG } from "../js/actions/index";
 import { Link } from "react-router-dom";
-import CardButton from "./cardbutton";
+import CardButton from "../components/cardbutton";
 
 const mapStateToProps = (state) => {
   return state;
@@ -39,9 +39,9 @@ class Dashboard extends Component {
             <div className="row mt-5">
               <div className="col-6 col-md-4">
                 <CardButton
-                  Title="Add New Project"
-                  Description="projects will display on portfolio page"
-                  Link="/addnewproject"
+                  Title="Add New Item"
+                  Description="items are reviews or blogs"
+                  Link="/addnewitem"
                 />
               </div>
               <div className="col-6 col-md-4">
@@ -53,9 +53,9 @@ class Dashboard extends Component {
               </div>
               <div className="col-6 col-md-4">
                 <CardButton
-                  Title="Website Stats"
-                  Description="Website Views"
-                  Link="/report"
+                  Title="Add New Group"
+                  Description="Add Groups to assign categories to items"
+                  Link="/addnewgroup"
                 />
               </div>
             </div>

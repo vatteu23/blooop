@@ -1,0 +1,19 @@
+@import "./variables";
+
+.btn-primary {
+  border: 2px solid $theme-primary !important;
+  background: transparent !important;
+  color: $theme-primary !important;
+  letter-spacing: 1.5px;
+
+  &:hover {
+    background: $gradient !important;
+    color: $white !important;
+  }
+  &:focus {
+    box-shadow: none !important;
+  }
+  &:active {
+    box-shadow: none !important;
+  }
+}

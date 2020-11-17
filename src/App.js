@@ -4,13 +4,17 @@ import "./App.css";
 import Home from "./components/home";
 import NavBar from "./components/navbar";
 import { fbAuth, fbFirestore } from "./firebase";
+
+import { bindActionCreators } from "redux";
 import Particles from "react-particles-js";
 import { connect } from "react-redux";
-import Dashboard from "./components/dashboard";
+import Dashboard from "./pages/dashboard";
 import Login from "./components/login";
 import PrivateRoute from "./components/privateroute";
 import CardButton from "./components/cardbutton";
-import AddNewProject from "./components/addnewproject";
+import AddNewGroup from "./adminpages/addnewgroup";
+import AddNewItem from "./adminpages/addnewitem";
+import AddNewTag from "./adminpages/addnewtags";
 import AddNewProduct from "./components/addnewproduct";
 import Portfolio from "./components/portfolio";
 import Report from "./components/report";
@@ -18,24 +22,33 @@ import Contact from "./components/contact";
 import ScrollToTop from "./components/scrolltotop";
 import Email from "./components/email";
 import About from "./components/about";
-import Footer from './components/footer';
-import Products from './components/products';
+import Footer from "./components/footer";
+import Products from "./components/products";
 import { UPDATE_USER, SIGN_OUT } from "./js/actions/index";
+import {
+  getUserDetails,
+  getUserDetailsPending,
+  getUserDetailsError,
+} from "./js/reducers/handleuserReducer";
+import fetchUserDetails from "./js/actioncreators/getUserDetails";
 
-const mapStateToProps = (state) => {
-  return state;
-};
+const mapStateToProps = (state) => ({
+  userDetailsError: getUserDetailsError(state),
+  userDetails: getUserDetails(state),
+  userDetailsPending: getUserDetailsPending(state),
+  useractivity: state.userActivity,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    UPDATE_USER: (user) => {
-      dispatch(UPDATE_USER(user));
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      fetchUserDetails: fetchUserDetails,
+      UPDATE_USER: UPDATE_USER,
+      SIGN_OUT: SIGN_OUT,
     },
-    SIGN_OUT: () => {
-      dispatch(SIGN_OUT());
-    },
-  };
-};
+    dispatch
+  );
+
 class App extends Component {
   constructor() {
     super();
@@ -57,24 +70,10 @@ class App extends Component {
   };
 
   componentDidMount = () => {
-    // fbFirestore.collection('email').add({
-    //   to: "vuday23@gmail.com",
-    //   message: {
-    //     subject: 'Your reservation is here !',
-    //     html: 'Hey This is your reservation for the event and it costs'
-        
-    //   }
-    // }).then(() => console.log('Queued email for delivery!'));
-
     fbAuth.onAuthStateChanged((user) => {
       if (user) {
-       
         this.props.UPDATE_USER(user);
-        this.setState({
-          authenticated: this.props.logs.authenticated,
-          currentUser: this.props.logs.currentUser,
-          loading: false,
-        });
+        this.props.fetchUserDetails(user);
       } else {
         this.setState({
           authenticated: false,
@@ -86,55 +85,8 @@ class App extends Component {
   };
 
   render() {
-    
     return (
       <div className="App">
-        <Particles
-          className="particles-bg"
-          params={{
-            particles: {
-              number: {
-                value: 100,
-                density: {
-                  enable: true,
-                  value_area: 1500,
-                },
-              },
-              line_linked: {
-                enable: true,
-                opacity: 0.02,
-              },
-              move: {
-                direction: "right",
-                speed: 0.05,
-              },
-              size: {
-                value: 1,
-              },
-              opacity: {
-                anim: {
-                  enable: true,
-                  speed: 1,
-                  opacity_min: 0.05,
-                },
-              },
-            },
-            interactivity: {
-              events: {
-                onclick: {
-                  enable: true,
-                  mode: "push",
-                },
-              },
-              modes: {
-                push: {
-                  particles_nb: 1,
-                },
-              },
-            },
-            retina_detect: true,
-          }}
-        />
         <ScrollToTop />
         <NavBar />
         <Switch>
@@ -148,49 +100,67 @@ class App extends Component {
           <Route path="/product/:productid" component={Products} />
           <PrivateRoute
             exact
+            path="/addnewgroup"
+            component={AddNewGroup}
+            authenticated={this.props.useractivity.authenticated}
+            redirecturl="/addnewgroup"
+          />
+          <PrivateRoute
+            exact
+            path="/addnewtag"
+            component={AddNewTag}
+            authenticated={this.props.useractivity.authenticated}
+            redirecturl="/addnewtag"
+          />
+          <PrivateRoute
+            exact
             path="/report"
             component={Report}
-            authenticated={this.props.logs.authenticated}
+            authenticated={this.props.useractivity.authenticated}
             redirecturl="/report"
           />
           <PrivateRoute
             exact
             path="/dashboard"
             component={Dashboard}
-            authenticated={this.props.logs.authenticated}
+            authenticated={this.props.useractivity.authenticated}
             redirecturl="/dashboard"
           />
           <PrivateRoute
             exact
-            path="/addnewproject"
-            component={AddNewProject}
-            authenticated={this.props.logs.authenticated}
-            redirecturl="/addnewproject"
+            path="/addnewitem"
+            component={() => (
+              <AddNewItem uid={this.props.userDetails.user_id} />
+            )}
+            authenticated={this.props.useractivity.authenticated}
+            redirecturl="/addnewitem"
           />
           <PrivateRoute
             exact
             path="/emails"
             component={Email}
-            authenticated={this.props.logs.authenticated}
+            authenticated={this.props.useractivity.authenticated}
             redirecturl="/emails"
           />
           <PrivateRoute
             exact
             path="/addnewproduct"
             component={AddNewProduct}
-            authenticated={this.props.logs.authenticated}
+            authenticated={this.props.useractivity.authenticated}
             redirecturl="/addnewproduct"
           />
 
           <Redirect to="/not-found" />
         </Switch>
-        <Footer/>
-        {this.props.logs.authenticated ? (
+        <Footer />
+        {this.props.useractivity.authenticated ? (
           <div className="container my-5">
             <div className="row">
               <div className="col-12">
                 <div className="card admin-card">
-                  <div className="card-header">{this.props.logs.currentUser}</div>
+                  <div className="card-header">
+                    {this.props.useractivity.currentUser}
+                  </div>
                   <div className="card-body">
                     <div className="row">
                       <div className="col-6">

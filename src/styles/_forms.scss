@@ -1,0 +1,17 @@
+@import "./variables";
+
+.form-group {
+  label {
+    color: $theme-primary;
+  }
+}
+
+.form-control {
+  background: transparent !important;
+  color: $dark !important;
+  &:focus {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-color: $theme-primary !important;
+  }
+}

@@ -1,10 +1,20 @@
-import { combineReducers } from 'redux'
-import logs from './logsReducer'
-import projects from './projectsReducer'
-import emails from './emailsReducer'
+import { combineReducers } from "redux";
+import logs from "./logsReducer";
+import projects from "./projectsReducer";
+import emails from "./emailsReducer";
+import groups from "./groupsReducer";
+import items from "./itemsReducer";
+import users from "./handleuserReducer";
+import tags from "./tagsReducer";
+import userActivity from "./userActivity";
 
 export default combineReducers({
   logs,
   projects,
-  emails
-})
+  emails,
+  groups,
+  items,
+  users,
+  tags,
+  userActivity,
+});

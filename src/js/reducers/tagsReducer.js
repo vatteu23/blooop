@@ -1,7 +1,7 @@
 import {
-  FETCH_EMAILS_ERROR,
-  FETCH_EMAILS_PENDING,
-  FETCH_EMAILS_SUCCESS,
+  FETCH_TAGS_ERROR,
+  FETCH_TAGS_PENDING,
+  FETCH_TAGS_SUCCESS,
 } from "../actions";
 
 const initialState = {
@@ -11,19 +11,19 @@ const initialState = {
 };
 export default function emailsReducer(state = initialState, action) {
   switch (action.type) {
-    case FETCH_EMAILS_PENDING:
+    case FETCH_TAGS_PENDING:
       return {
         ...state,
         pending: true,
       };
-    case FETCH_EMAILS_SUCCESS: {
+    case FETCH_TAGS_SUCCESS: {
       return {
         ...state,
         pending: false,
-        emails: action.emails,
+        tags: action.tags,
       };
     }
-    case FETCH_EMAILS_ERROR: {
+    case FETCH_TAGS_ERROR: {
       return {
         ...state,
         pending: false,
@@ -36,6 +36,6 @@ export default function emailsReducer(state = initialState, action) {
   }
 }
 
-export const getEmails = (state) => state.emails;
-export const getEmailsPending = (state) => state.pending;
-export const getEmailsError = (state) => state.error;
+export const getTags = (state) => state.tags;
+export const getTagsPending = (state) => state.pending;
+export const getTagsError = (state) => state.error;
