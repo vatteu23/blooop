@@ -1,0 +1,18 @@
+@import "./variables";
+
+.review-card {
+  border: 1px solid #ececec85 !important;
+  transition: all ease 0.35s;
+  &:hover {
+    transform: translateY(-7px);
+    translate: all ease 0.35s;
+    box-shadow: 0 5px 15px -7px $dark;
+  }
+  .review-card-title {
+    color: $dark;
+    font-size: 20px;
+    text-transform: uppercase;
+    line-height: 1;
+    transition: all ease 0.35s;
+  }
+}

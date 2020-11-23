@@ -7,6 +7,7 @@ import items from "./itemsReducer";
 import users from "./handleuserReducer";
 import tags from "./tagsReducer";
 import userActivity from "./userActivity";
+import itemByParam from "./itemByParamReducer";
 
 export default combineReducers({
   logs,
@@ -17,4 +18,5 @@ export default combineReducers({
   users,
   tags,
   userActivity,
+  itemByParam,
 });

@@ -12,6 +12,13 @@ import {
   getGroupsPending,
 } from "../js/reducers/groupsReducer";
 import fetchGroups from "../js/actioncreators/getGroups";
+import {
+  getItemByParam,
+  getItemByParamError,
+  getItemByParamPending,
+} from "../js/reducers/itemByParamReducer";
+
+import fetchItemByParam from "../js/actioncreators/getItemByParam";
 
 import {
   getItems,
@@ -20,16 +27,37 @@ import {
 } from "../js/reducers/itemsReducer";
 import fetchItems from "../js/actioncreators/getItems";
 
+import {
+  getUserDetails,
+  getUserDetailsPending,
+  getUserDetailsError,
+} from "../js/reducers/handleuserReducer";
+import fetchUserDetails from "../js/actioncreators/getUserDetails";
+import { each } from "jquery";
+
 const mapStateToProps = (state) => ({
+  itemError: getItemByParamError(state),
+  itemPending: getItemByParamPending(state),
+  item: getItemByParam(state),
   itemsError: getItemsError(state),
   items: getItems(state),
   itemsPending: getItemsPending(state),
+  groupsError: getGroupsError(state),
+  groups: getGroups(state),
+  groupsPending: getGroupsPending(state),
+
+  userDetailsError: getUserDetailsError(state),
+  userDetails: getUserDetails(state),
+  userDetailsPending: getUserDetailsPending(state),
 });
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       fetchItems: fetchItems,
+      fetchGroups: fetchGroups,
+      fetchItemByParam: fetchItemByParam,
+      fetchUserDetails: fetchUserDetails,
     },
     dispatch
   );
@@ -47,13 +75,39 @@ class EditItem extends Component {
   componentDidMount = () => {
     document.title = "Edit Item";
     this.props.fetchItems();
-    //this.props.UPDATE_LOG('HomePage')
+    this.props.fetchGroups();
+  };
+
+  componentWillReceiveProps(nextProps) {
+    // You don't have to do this check first, but it can help prevent an unneeded render
+    if (nextProps.item) {
+      if (nextProps.item.title !== this.state.item_title) {
+        this.updateForm(
+          nextProps.item.title,
+          nextProps.item.description,
+          nextProps.item.groupid,
+          nextProps.item.image,
+          nextProps.item.url,
+          nextProps.item.link
+        );
+      }
+    }
+  }
+
+  updateForm = (title, description, groupid, image, url, link) => {
+    this.setState({
+      item_title: title,
+      item_description: description,
+      item_group: groupid,
+      item_image: image,
+      item_url: url,
+      item_link: link,
+    });
   };
 
   handleAddNewProject = (title, description, image, url, group) => {
     if (title && description && image && url && group) {
-      const itemID = db.ref("/items").push();
-      itemID.set(
+      db.ref("/items/" + this.state.item_selected).update(
         {
           createdat: Date.now(),
           title: title,
@@ -73,6 +127,21 @@ class EditItem extends Component {
       );
     } else {
       console.log("update fields");
+    }
+  };
+
+  itemSelected = (e) => {
+    //   if(e.target.value !== "" )
+    this.setState({ item_selected: e.target.value });
+
+    let param = {
+      id: null,
+      pagename: null,
+    };
+
+    if (e.target.value !== "") {
+      param.id = e.target.value;
+      this.props.fetchItemByParam(param);
     }
   };
 
@@ -108,8 +177,31 @@ class EditItem extends Component {
             <div className="row">
               <div className="col-12">
                 <h2 className="text-left theme-color-hover mb-3">
-                  Add New Item(Review or Blog)
+                  Edit Item(Review or Blog)
                 </h2>
+              </div>
+
+              <div className="col-12 my-5">
+                <div className="form-group">
+                  <select
+                    className="form-control"
+                    id="item_selected"
+                    onChange={this.itemSelected}
+                    value={this.state.item_selected || ""}
+                  >
+                    <option value="">SELECT ITEM</option>
+                    {this.props.items.items
+                      ? Object.keys(this.props.items.items).map((id) => {
+                          let i = this.props.items.items;
+                          return (
+                            <option key={id} value={id}>
+                              {i[id].title}
+                            </option>
+                          );
+                        })
+                      : null}
+                  </select>
+                </div>
               </div>
               <div className="col-12 text-left">
                 <div className="form-group">
@@ -156,7 +248,17 @@ class EditItem extends Component {
                     onChange={this.updateState}
                   />
                 </div>
-
+                <div className="form-group">
+                  <label htmlFor="item_url">Youtube Link </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={this.state.item_link || ""}
+                    id="item_link"
+                    placeholder="Youtube link"
+                    onChange={this.updateState}
+                  />
+                </div>
                 {this.props.groups.groups ? (
                   <div className="form-group">
                     <label htmlFor="item_group">SELECT GROUP</label>
@@ -167,7 +269,7 @@ class EditItem extends Component {
                       onChange={this.updateState}
                     >
                       <option key={-1} value="">
-                        SELECT A SERVICE
+                        SELECT GROUP
                       </option>
                       {Object.keys(this.props.groups.groups).map(
                         (res, index) => {
@@ -190,12 +292,13 @@ class EditItem extends Component {
                       this.state.item_description,
                       this.state.item_image,
                       this.state.item_url,
+                      this.state.item_link,
                       this.state.item_group
                     )
                   }
                   className="btn btn-primary"
                 >
-                  SUBMIT
+                  UPDATE
                 </button>
               </div>
 

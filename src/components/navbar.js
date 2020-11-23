@@ -50,7 +50,7 @@ class NavBar extends Component {
                     className="nav-link"
                     onClick={() => this.showHamburgerMenu(false)}
                     activeClassName="nav-link-selected"
-                    to="/home"
+                    to="/reviews"
                   >
                     REVIEWS
                   </NavLink>

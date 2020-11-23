@@ -14,6 +14,7 @@ import PrivateRoute from "./components/privateroute";
 import CardButton from "./components/cardbutton";
 import AddNewGroup from "./adminpages/addnewgroup";
 import AddNewItem from "./adminpages/addnewitem";
+import EditItem from "./adminpages/edititems";
 import AddNewTag from "./adminpages/addnewtags";
 import AddNewProduct from "./components/addnewproduct";
 import Portfolio from "./components/portfolio";
@@ -24,6 +25,7 @@ import Email from "./components/email";
 import About from "./components/about";
 import Footer from "./components/footer";
 import Products from "./components/products";
+import Reviews from "./pages/reviews";
 import { UPDATE_USER, SIGN_OUT } from "./js/actions/index";
 import {
   getUserDetails,
@@ -74,6 +76,7 @@ class App extends Component {
       if (user) {
         this.props.UPDATE_USER(user);
         this.props.fetchUserDetails(user);
+        this.setState({ user: user });
       } else {
         this.setState({
           authenticated: false,
@@ -91,8 +94,8 @@ class App extends Component {
         <NavBar />
         <Switch>
           <Route path="/admin-login" component={Login} />
-          <Route exact path="/" component={Home} />
-          <Route path="/home" component={Home} />
+          <Route exact path="/" component={Reviews} />
+          <Route path="/Reviews" component={Reviews} />
           <Route path="/portfolio" component={Portfolio} />
           <Route path="/contact" component={Contact} />
           <Route path="/about" component={About} />
@@ -134,6 +137,18 @@ class App extends Component {
             )}
             authenticated={this.props.useractivity.authenticated}
             redirecturl="/addnewitem"
+          />
+          <PrivateRoute
+            exact
+            path="/edititem"
+            component={() => (
+              <EditItem
+                uid={this.props.userDetails.user_id}
+                user={this.state.user}
+              />
+            )}
+            authenticated={this.props.useractivity.authenticated}
+            redirecturl="/edititem"
           />
           <PrivateRoute
             exact

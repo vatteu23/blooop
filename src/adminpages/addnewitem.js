@@ -43,8 +43,8 @@ class AddNewItem extends Component {
     //this.props.UPDATE_LOG('HomePage')
   };
 
-  handleAddNewProject = (title, description, image, url, group) => {
-    if (title && description && image && url && group) {
+  handleAddNewProject = (title, description, image, url, link, group) => {
+    if (title && description && image && url && link && group) {
       const itemID = db.ref("/items").push();
       itemID.set(
         {
@@ -54,6 +54,7 @@ class AddNewItem extends Component {
           author: this.props.uid,
           image: image,
           url: url,
+          link: link,
           groupid: group,
           pagename: title.toLowerCase().replace(/ /g, "-"),
         },
@@ -61,7 +62,7 @@ class AddNewItem extends Component {
           if (error) {
             console.log("Unable to save data");
           } else {
-            alert("Added New Project!!");
+            alert("Added New Item!!");
           }
         }
       );
@@ -150,7 +151,17 @@ class AddNewItem extends Component {
                     onChange={this.updateState}
                   />
                 </div>
-
+                <div className="form-group">
+                  <label htmlFor="item_url">Youtube Link </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={this.state.item_link || ""}
+                    id="item_link"
+                    placeholder="Youtube link"
+                    onChange={this.updateState}
+                  />
+                </div>
                 {this.props.groups.groups ? (
                   <div className="form-group">
                     <label htmlFor="item_group">SELECT GROUP</label>
@@ -161,7 +172,7 @@ class AddNewItem extends Component {
                       onChange={this.updateState}
                     >
                       <option key={-1} value="">
-                        SELECT A SERVICE
+                        SELECT GROUP
                       </option>
                       {Object.keys(this.props.groups.groups).map(
                         (res, index) => {
@@ -184,6 +195,7 @@ class AddNewItem extends Component {
                       this.state.item_description,
                       this.state.item_image,
                       this.state.item_url,
+                      this.state.item_link,
                       this.state.item_group
                     )
                   }

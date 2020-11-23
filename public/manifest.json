@@ -1,19 +1,19 @@
 {
-  "short_name": "Uday Vatti",
-  "name": "Uday Vatti | Love to create beautiful solutions",
+  "short_name": "BLoooP",
+  "name": "I make quality content videos about useful tech.",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "https://firebasestorage.googleapis.com/v0/b/blooop-bb011.appspot.com/o/images%2Ffavicon-32x32.png?alt=media&token=57246736-f62a-4a15-8c6e-3bd86d03aad7",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "https://firebasestorage.googleapis.com/v0/b/blooop-bb011.appspot.com/o/images%2Fandroid-chrome-192x192.png?alt=media&token=b8b88745-3f9c-4eed-985f-c86dde8d8a62",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "https://firebasestorage.googleapis.com/v0/b/blooop-bb011.appspot.com/o/images%2Fandroid-chrome-512x512.png?alt=media&token=96b7c494-ac84-42d1-8893-d835e295fbdb",
       "type": "image/png",
       "sizes": "512x512"
     }

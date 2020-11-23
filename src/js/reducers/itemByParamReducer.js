@@ -37,6 +37,8 @@ export default function itemByParamReducer(state = initialState, action) {
   }
 }
 
-export const getItemByParam = (state) => state.item;
-export const getItemByParamPending = (state) => state.pending;
-export const getItemByParamError = (state) => state.error;
+export const getItemByParam = (state) => {
+  return state.itemByParam.item;
+};
+export const getItemByParamPending = (state) => state.itemByParam.pending;
+export const getItemByParamError = (state) => state.itemByParam.error;
