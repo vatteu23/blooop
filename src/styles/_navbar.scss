@@ -22,6 +22,7 @@
   .navbar-nav {
     .nav-item {
       .nav-link {
+        font-size: 0.7rem;
         letter-spacing: 4px;
         color: $dark !important;
         &:hover {
@@ -35,7 +36,6 @@
   }
   .navbar-collapse {
     @media (max-width: 518px) {
-      background-color: $theme-primary;
       opacity: 0;
       transition: height 0.5s ease-in-out, opacity 1s ease-in-out;
 

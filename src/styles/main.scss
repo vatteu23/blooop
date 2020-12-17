@@ -13,6 +13,11 @@ body {
 .pages {
   margin-top: 40px;
 }
+
+::selection {
+  background-color: $dark;
+  color: $theme-primary;
+}
 button:focus {
   outline: none !important;
 }

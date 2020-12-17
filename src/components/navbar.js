@@ -19,7 +19,7 @@ class NavBar extends Component {
     return (
       <React.Fragment>
         <nav className="p-0 navbar navbar-expand-sm navbar-light">
-          <div className="container d-flex flex-column">
+          <div className="container">
             <Link className="brand d-flex flex-row align-items-center" to="/">
               <img
                 className="brand-logo mr-2"
@@ -32,7 +32,7 @@ class NavBar extends Component {
               className="navbar-toggler"
               buttonWidth={25}
               isActive={this.state.showNav}
-              barColor="white"
+              barColor="#555555"
               onClick={() => this.showHamburgerMenu(!this.state.showNav)}
             />
 

@@ -95,7 +95,7 @@ class AddNewGroup extends Component {
                       className="form-control"
                       value={this.state.group_title || ""}
                       id="group_title"
-                      placeholder="Group Title "
+                      placeholder="Tag Title "
                       onChange={this.updateState}
                     />
                   </div>
@@ -105,7 +105,7 @@ class AddNewGroup extends Component {
                       className="form-control"
                       value={this.state.group_description}
                       id="group_description"
-                      placeholder="Group Description "
+                      placeholder="Tag Description "
                       onChange={this.updateState}
                     />
                   </div>
@@ -140,7 +140,7 @@ class AddNewGroup extends Component {
 
             <div className="data-details mt-4">
               <h2 className="text-left theme-color-hover mt-5">
-                Existing Groups
+                Existing Tags
               </h2>
               <div className="list-group">
                 {this.props.tags.tags ? (

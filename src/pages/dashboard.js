@@ -37,25 +37,33 @@ class Dashboard extends Component {
           <div className="container pages">
             <h2 className="">Dashboard</h2>
             <div className="row mt-5">
-              <div className="col-6 col-md-4">
+              <div className="col-6 col-md-4 mb-3">
                 <CardButton
                   Title="Add New Item"
                   Description="items are reviews or blogs"
                   Link="/addnewitem"
                 />
               </div>
-              <div className="col-6 col-md-4">
+              <div className="col-6 col-md-4 mb-3">
                 <CardButton
-                  Title="Add New Product"
-                  Description="products will display on products page"
-                  Link="/addnewproduct"
+                  Title="Add New Tag"
+                  Description="Add tags that are assigned to reviews for SEO and ad purposes"
+                  Link="/addnewtag"
                 />
               </div>
-              <div className="col-6 col-md-4">
+
+              <div className="col-6 col-md-4 mb-3">
                 <CardButton
                   Title="Add New Group"
                   Description="Add Groups to assign categories to items"
                   Link="/addnewgroup"
+                />
+              </div>
+              <div className="col-6 col-md-4 mb-3">
+                <CardButton
+                  Title="Edit Item"
+                  Description="Add tags to items or change content"
+                  Link="/edititem"
                 />
               </div>
             </div>

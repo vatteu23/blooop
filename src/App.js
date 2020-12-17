@@ -9,6 +9,7 @@ import { bindActionCreators } from "redux";
 import Particles from "react-particles-js";
 import { connect } from "react-redux";
 import Dashboard from "./pages/dashboard";
+import Item from "./pages/item";
 import Login from "./components/login";
 import PrivateRoute from "./components/privateroute";
 import CardButton from "./components/cardbutton";
@@ -99,6 +100,7 @@ class App extends Component {
           <Route path="/portfolio" component={Portfolio} />
           <Route path="/contact" component={Contact} />
           <Route path="/about" component={About} />
+          <Route path="/review/:pagename" component={Item} />
           <Route path="/products" component={Products} />
           <Route path="/product/:productid" component={Products} />
           <PrivateRoute

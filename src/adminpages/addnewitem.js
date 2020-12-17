@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { db, fbStorage } from "../firebase";
 import FileUploader from "react-firebase-file-uploader";
+import Select from "react-select";
 import { Link } from "react-router-dom";
 import { act } from "@testing-library/react";
 
@@ -41,9 +42,43 @@ class AddNewItem extends Component {
     document.title = "Add New Item";
     this.props.fetchGroups();
     //this.props.UPDATE_LOG('HomePage')
+    this.updateTags();
   };
 
-  handleAddNewProject = (title, description, image, url, link, group) => {
+  updateTags = () => {
+    let dbTag = db.ref("/tags");
+    let tags = [];
+    dbTag.orderByChild("createdat").once("value", (snapshot) => {
+      if (snapshot.val()) {
+        let alltags = snapshot.val();
+
+        Object.keys(alltags).map((id) => {
+          tags.push({
+            label: alltags[id]["title"],
+            value: id,
+          });
+
+          this.setState({ tags: tags });
+        });
+      }
+    });
+  };
+
+  handleAddNewProject = (
+    title,
+    description,
+    image,
+    url,
+    link,
+    group,
+    newTagsList
+  ) => {
+    let tags = [];
+    if (newTagsList) {
+      newTagsList.map((res, i) => {
+        tags.push(res.value);
+      });
+    }
     if (title && description && image && url && link && group) {
       const itemID = db.ref("/items").push();
       itemID.set(
@@ -57,6 +92,7 @@ class AddNewItem extends Component {
           link: link,
           groupid: group,
           pagename: title.toLowerCase().replace(/ /g, "-"),
+          tags: tags,
         },
         function (error) {
           if (error) {
@@ -187,6 +223,18 @@ class AddNewItem extends Component {
                     </select>
                   </div>
                 ) : null}
+                {this.state.tags ? (
+                  <div className="form-group">
+                    <label htmlFor="item_tags">Tags</label>
+                    <Select
+                      onChange={(opt) => {
+                        this.setState({ newTagsList: opt });
+                      }}
+                      options={this.state.tags}
+                      isMulti
+                    ></Select>
+                  </div>
+                ) : null}
 
                 <button
                   onClick={() =>
@@ -196,7 +244,8 @@ class AddNewItem extends Component {
                       this.state.item_image,
                       this.state.item_url,
                       this.state.item_link,
-                      this.state.item_group
+                      this.state.item_group,
+                      this.state.newTagsList
                     )
                   }
                   className="btn btn-primary"

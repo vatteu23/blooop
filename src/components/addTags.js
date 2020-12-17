@@ -15,75 +15,94 @@ class AddProjectsToService extends Component {
   componentDidMount = () => {
     this.setState({
       details: this.props.details,
-      ref: this.props.ref,
+      ref: this.props.dbref,
+      id: this.props.id,
+      alltags: this.props.tags,
     });
+    this.filterProjects(this.props.details, this.props.id, this.props.tags);
   };
 
   shouldComponentUpdate = (nextProps, nextState) => {
     if (this.props.details !== nextProps.details) {
-      this.filterProjects(nextProps.ref, nextProps.details, nextProps.refid);
+      this.filterProjects(nextProps.details, nextProps.id, nextProps.tags);
       return true;
+    } else if (this.state != nextState) {
+      return true;
+    } else {
+      return false;
     }
-    return false;
   };
 
   updateProjects = () => {
     let newTagsList = [];
+
     if (this.state.selected.length > 0) {
       this.state.selected.map((res) => {
         return newTagsList.push(res.value);
       });
     }
-    this.state.newTagsList.map((res) => {
-      return newTagsList.push(res.value);
-    });
-
-    if (newTagsList.length > 0) {
-      db.ref("/services/" + this.state.serviceId)
-        .child("service_projects")
-        .set(newTagsList);
-      db.ref("/services/" + this.state.serviceId).once("value", (snapshot) => {
-        if (snapshot.val()) {
-          this.filterProjects(snapshot.val(), this.state.serviceId);
-        }
+    if (this.state.newTagsList) {
+      this.state.newTagsList.map((res) => {
+        return newTagsList.push(res.value);
       });
     }
-    this.setState({ newTagsList: null });
-  };
 
-  filterProjects = (ref, details, refid) => {
-    const ref = db.ref(ref);
-    ref.once("value", (snapshot) => {
-      if (snapshot.val()) {
-        let tags = [],
-          selected = [];
-        Object.keys(snapshot.val()).map((id) => {
-          if (details.tags) {
-            details.tags.indexOf(id) >= 0
-              ? selected.push({
-                  label: snapshot.val()[id]["title"],
-                  value: id,
-                })
-              : tags.push({
-                  label: snapshot.val()[id]["title"],
-                  value: id,
-                });
+    if (newTagsList.length > 0) {
+      db.ref("/" + this.state.ref + "/" + this.state.id)
+        .child("tags")
+        .set(newTagsList, (err) => {
+          if (err) {
           } else {
-            tags.push({
-              label: snapshot.val()[id]["title"],
-              value: id,
-            });
+            db.ref("/" + this.state.ref + "/" + this.state.id).once(
+              "value",
+              (snapshot) => {
+                if (snapshot.val()) {
+                  this.filterProjects(
+                    snapshot.val(),
+                    this.state.ref,
+                    this.state.alltags
+                  );
+                }
+              }
+            );
           }
         });
-        this.setState({
-          tags: tags,
-          selected: selected,
-          selectedTags: details.tags,
-          refid: refid,
+    }
+  };
+
+  filterProjects = (details, refid, alltags) => {
+    let tags = [],
+      selected = [];
+
+    Object.keys(alltags).map((id) => {
+      if (details.tags) {
+        if (details.tags.indexOf(id) >= 0) {
+          selected.push({
+            label: alltags[id]["title"],
+            value: id,
+          });
+        } else {
+          tags.push({
+            label: alltags[id]["title"],
+            value: id,
+          });
+        }
+      } else {
+        tags.push({
+          label: alltags[id]["title"],
+          value: id,
         });
-        this.forceUpdate();
       }
     });
+
+    this.setState({
+      tags: tags,
+      selected: selected,
+      selectedTags: details.tags,
+      id: refid,
+      newTagsList: null,
+    });
+    this.forceUpdate();
   };
 
   updateState = (e) => {
@@ -92,19 +111,32 @@ class AddProjectsToService extends Component {
 
   deleteProject = (id) => {
     let selected = this.state.selectedTags;
-    let refid = this.state.refid;
+    let refid = this.state.id;
     let index = selected.indexOf(id);
     if (selected.indexOf(id) >= 0) {
       selected.splice(index, 1);
-      db.ref(this.state.ref + this.state.refid)
-        .child("tags")
-        .set(selected);
 
-      db.ref(this.state.ref + refid).once("value", (snapshot) => {
-        if (snapshot.val()) {
-          this.filterProjects(snapshot.val(), refid);
-        }
-      });
+      db.ref("/" + this.state.ref + "/" + this.state.id)
+        .child("tags")
+        .set(selected, (error) => {
+          if (error) {
+            console.log(error);
+            // The write failed...
+          } else {
+            db.ref("/" + this.state.ref + "/" + this.state.id).once(
+              "value",
+              (snapshot) => {
+                if (snapshot.val()) {
+                  this.filterProjects(
+                    snapshot.val(),
+                    refid,
+                    this.state.alltags
+                  );
+                }
+              }
+            );
+          }
+        });
     }
   };
 
@@ -114,11 +146,11 @@ class AddProjectsToService extends Component {
         <div className="container page-content">
           <div className="row">
             <div className="col-12 mb-3">
-              <h2>Add Projects to Service</h2>
+              <h2>Add Tags to Item</h2>
 
               {this.state.selected ? (
                 <div className="d-flex flex-row mb-3">
-                  <p className="mr-2">Selected Projects:</p>
+                  <p className="mr-2">Selected Tags:</p>
                   {this.state.selected.map((res, id) => {
                     return (
                       <div key={id} className="mx-2">
@@ -154,7 +186,7 @@ class AddProjectsToService extends Component {
                 onClick={() => this.updateProjects()}
                 className="btn btn-primary"
               >
-                Add Projects
+                Add Tag(s)
               </button>
             </div>
           </div>

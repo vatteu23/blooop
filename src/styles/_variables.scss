@@ -4,5 +4,12 @@ $theme-primary-hover-dark: #f69b4a;
 $theme-primary-hover-extra-dark: #f69b4a;
 $theme-primary-hover-light: #f69b4a;
 $gradient: linear-gradient(60.28deg, $theme-primary, $theme-primary-hover);
+$gradient-hover: linear-gradient(
+  60.28deg,
+  $theme-primary-hover,
+  $theme-primary
+);
 $white: #ffffff;
 $dark: #555555;
+
+$small-screen: 720px;

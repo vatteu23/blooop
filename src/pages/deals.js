@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-class Reviews extends Component {
+class Deals extends Component {
   constructor() {
     super();
     this.state = {
@@ -97,13 +97,6 @@ class Reviews extends Component {
       });
     return (
       <React.Fragment>
-        <span
-          onClick={() => {
-            console.log("test");
-          }}
-        >
-          CLICK
-        </span>
         <div className="container pages">
           {items ? (
             <MetaTags>
@@ -174,4 +167,4 @@ class Reviews extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Reviews);
+export default connect(mapStateToProps, mapDispatchToProps)(Deals);

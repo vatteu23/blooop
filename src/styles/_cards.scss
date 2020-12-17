@@ -3,10 +3,16 @@
 .review-card {
   border: 1px solid #ececec85 !important;
   transition: all ease 0.35s;
+  border-radius: 10px !important;
   &:hover {
     transform: translateY(-7px);
     translate: all ease 0.35s;
     box-shadow: 0 5px 15px -7px $dark;
+  }
+  .review-card-image {
+    border-radius: 10px 10px 0px 0px !important;
+    height: 250px;
+    background-size: cover;
   }
   .review-card-title {
     color: $dark;
@@ -14,5 +20,45 @@
     text-transform: uppercase;
     line-height: 1;
     transition: all ease 0.35s;
+  }
+}
+
+.item-card {
+  border: 1px solid #ececec85 !important;
+  border-radius: 10px !important;
+  .item-card-image {
+    border-radius: 10px 10px 0px 0px !important;
+    height: 350px;
+    background-position: center;
+    background-size: cover;
+    @media (max-width: $small-screen) {
+      height: 200px !important;
+    }
+  }
+  .item-card-content {
+    padding: 20px;
+    .item-iframe {
+      height: 350px;
+      width: 80%;
+      @media (max-width: $small-screen) {
+        height: 200px;
+        width: 100%;
+      }
+    }
+    .item-card-title {
+      h2 {
+        color: $dark;
+        font-size: 2rem;
+        font-weight: 700;
+        text-transform: uppercase !important;
+        @media (max-width: $small-screen) {
+          font-size: 1.6rem;
+        }
+      }
+    }
+    p {
+      font-size: 20px;
+      color: $dark;
+    }
   }
 }

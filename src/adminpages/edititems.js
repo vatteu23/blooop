@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { db, fbStorage } from "../firebase";
 import FileUploader from "react-firebase-file-uploader";
+import AddTags from "../components/addTags";
 import { Link } from "react-router-dom";
 import { act } from "@testing-library/react";
 
@@ -81,14 +82,14 @@ class EditItem extends Component {
   componentWillReceiveProps(nextProps) {
     // You don't have to do this check first, but it can help prevent an unneeded render
     if (nextProps.item) {
-      if (nextProps.item.title !== this.state.item_title) {
+      if (nextProps.item.itemDetails.title !== this.state.item_title) {
         this.updateForm(
-          nextProps.item.title,
-          nextProps.item.description,
-          nextProps.item.groupid,
-          nextProps.item.image,
-          nextProps.item.url,
-          nextProps.item.link
+          nextProps.item.itemDetails.title,
+          nextProps.item.itemDetails.description,
+          nextProps.item.itemDetails.groupid,
+          nextProps.item.itemDetails.image,
+          nextProps.item.itemDetails.url,
+          nextProps.item.itemDetails.link
         );
       }
     }
@@ -105,23 +106,24 @@ class EditItem extends Component {
     });
   };
 
-  handleAddNewProject = (title, description, image, url, group) => {
-    if (title && description && image && url && group) {
+  handleAddNewProject = (title, description, image, url, link, group) => {
+    if (title && description && image && url && link && group) {
       db.ref("/items/" + this.state.item_selected).update(
         {
-          createdat: Date.now(),
           title: title,
           description: description,
           author: this.props.uid,
           image: image,
           url: url,
           groupid: group,
+          pagename: title.toLowerCase().replace(/[^A-Z0-9]+/gi, "-"),
         },
         function (error) {
           if (error) {
             console.log("Unable to save data");
           } else {
-            alert("Added New Project!!");
+            alert("Updated Item");
+            window.location.reload();
           }
         }
       );
@@ -264,7 +266,7 @@ class EditItem extends Component {
                     <label htmlFor="item_group">SELECT GROUP</label>
                     <select
                       className="form-control"
-                      value={this.state.item_group || ""}
+                      value={this.state.item_group}
                       id="item_group"
                       onChange={this.updateState}
                     >
@@ -343,6 +345,17 @@ class EditItem extends Component {
                   onProgress={this.handleProgress}
                 />
               </div>
+
+              {this.props.item ? (
+                <div className="col-12">
+                  <AddTags
+                    details={this.props.item.itemDetails}
+                    dbref="items"
+                    id={this.state.item_selected}
+                    tags={this.props.item.tags}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

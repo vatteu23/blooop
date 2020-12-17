@@ -17,3 +17,16 @@
     box-shadow: none !important;
   }
 }
+
+.btn-paging {
+  width: 120px;
+}
+
+.btn-subscribe {
+  border: 2px solid $theme-primary !important;
+  background: $gradient !important;
+  color: white !important;
+  &:hover {
+    background: $gradient-hover !important;
+  }
+}
